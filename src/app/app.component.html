@@ -3,6 +3,5 @@
 <div id="preview"></div>
 
 <button class="btn btn-primary" (click)="save()">Save</button>
-<button class="btn btn-primary" (click)="showPdf()">Print</button>
 
-<iframe id="printPreview" type="application/pdf"></iframe>
+<app-html-pdf-make [htmlString]="htmlString"></app-html-pdf-make>
