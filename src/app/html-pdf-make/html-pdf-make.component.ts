@@ -1,7 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
-
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+
 declare var require: any;
 const htmlToPdfmake = require('html-to-pdfmake');
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
@@ -12,6 +18,7 @@ const htmlToPdfmake = require('html-to-pdfmake');
   styleUrls: ['./html-pdf-make.component.css'],
 })
 export class HtmlPdfMakeComponent implements OnInit {
+  @ViewChild('preview') preview!: ElementRef<HTMLIFrameElement>;
   @Input()
   htmlString: string = '';
 
@@ -20,15 +27,16 @@ export class HtmlPdfMakeComponent implements OnInit {
   ngOnInit(): void {}
 
   showPdf() {
-    const printPreview = document.getElementById(
-      'printPreview'
-    ) as HTMLIFrameElement;
-    var html = htmlToPdfmake(this.htmlString);
+    const preview = this.preview.nativeElement;
+    const html = htmlToPdfmake(this.htmlString);
     const documentDefinition = { content: html };
-    pdfMake.createPdf(documentDefinition).getBase64(
-      function (encodedString: any) {
-        printPreview.src = 'data:application/pdf;base64,' + encodedString;
-      }.bind(this)
-    );
+    const pdf = pdfMake.createPdf(documentDefinition);
+    const callback = function (encodedString: string) {
+      preview?.setAttribute(
+        'src',
+        'data:application/pdf;base64,' + encodedString
+      );
+    };
+    pdf.getBase64(callback);
   }
 }
