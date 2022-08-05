@@ -1,7 +1,10 @@
-<input type="text" [(ngModel)]="htmlString" />
+<div class="flex">
+  <div class="item">
+    <app-angular-editor [(value)]="htmlString"></app-angular-editor>
+    {{ htmlString }}
+  </div>
 
-<div id="preview"></div>
-
-<button class="btn btn-primary" (click)="save()">Save</button>
-
-<app-html-pdf-make [htmlString]="htmlString"></app-html-pdf-make>
+  <div class="item">
+    <app-html-pdf-make [htmlString]="htmlString"></app-html-pdf-make>
+  </div>
+</div>
